@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  db:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - "ACCEPT_EULA=1"
+      - "MSSQL_PID=Developer"
+      - "MSSQL_SA_PASSWORD=yourStrong(!)Password"
+    volumes:
+      - ./sql_data:/var/opt/mssql/data
+    ports:
+      - 1433:1433
