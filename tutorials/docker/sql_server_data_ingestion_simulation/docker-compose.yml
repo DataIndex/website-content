@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  db:
+    build:
+      context: ./database
+      dockerfile: Dockerfile
+    environment:
+      - "ACCEPT_EULA=1"
+      - "MSSQL_PID=Developer"
+      - "MSSQL_SA_PASSWORD=yourStrong(!)Password"
+    # volumes:
+      # - ./sql_data:/var/opt/mssql/data
+    ports:
+      - 1433:1433
+  python_job:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - "SQL_SERVER_DRIVER=ODBC Driver 17 for SQL Server"
+      - "SQL_SERVER_HOST=db"
+      - "SQL_SERVER_PORT=1433"
+      - "SQL_SERVER_DATABASE=business_db"
+      - "SQL_SERVER_USERNAME=sa"
+      - "SQL_SERVER_PASSWORD=yourStrong(!)Password"
+
+      - "WAIT_HOSTS=db:1433"
+      - "WAIT_TIMEOUT=90"
+      - "WAIT_SLEEP_INTERVAL=10"
+      - "WAIT_HOST_CONNECT_TIMEOUT=5"
