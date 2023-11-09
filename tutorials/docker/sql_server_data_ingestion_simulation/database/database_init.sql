@@ -1,18 +1,19 @@
 DROP TABLE IF EXISTS [dbo].[projects];
 GO
 
-CREATE TABLE [dbo].[projects] (
-    [Id] [INT] IDENTITY(1,1) PRIMARY KEY,
-    [Name] [NVARCHAR](50) NOT NULL,
-    [Created_Date] [DATE] NOT NULL,
-    [MD5_Hash] AS CAST(
-        HASHBYTES(
-            'MD5',
-            CONCAT(
-                Name,
-                CONVERT(VARCHAR(10), Created_Date, 120)
-            )
-        )
-    )
-)
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[projects](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[Name] [nvarchar](50) NOT NULL,
+	[Created_Date] [date] NOT NULL,
+	[SHA1_Hash] AS hashbytes('SHA1',concat([Name],CONVERT([varchar](10),[Created_Date],(120)))) PERSISTED
+) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[projects] ADD PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
